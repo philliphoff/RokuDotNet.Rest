@@ -9,21 +9,19 @@ namespace RokuDotNet.Rest
     [Route("[controller]")]
     public class RokuController : Controller
     {
+        private readonly IRokuDeviceProvider deviceProvider;
+
+        public RokuController(IRokuDeviceProvider deviceProvider)
+        {
+            this.deviceProvider = deviceProvider ?? throw new ArgumentNullException(nameof(deviceProvider));
+        }
+
         [Route("devices/{id}/query/device-info")]
         public async Task<DeviceInfo> GetDeviceInfoAsync(string id)
         {
-            var discoveryClient = new RokuDeviceDiscoveryClient();
+            var device = await this.deviceProvider.GetDeviceFromIdAsync(id);
 
-            var device = await discoveryClient.DiscoverSpecificDeviceAsync($"uuid:roku:ecp:{id}");
-            var deviceInfo = await device.QueryApi.GetDeviceInfoAsync();
-
-            return deviceInfo;
-        }
-
-        [HttpGet("test")]
-        public Task<string> Test()
-        {
-            return Task.FromResult("Hello world!");
+            return await device.QueryApi.GetDeviceInfoAsync();
         }
     }
 }
