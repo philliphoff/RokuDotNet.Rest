@@ -1,0 +1,37 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\Key.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <AssemblyVersion Condition="'$(AssemblyVersion)' == ''">0.1</AssemblyVersion>
+    <PackageVersion Condition="'$(PackageVersion)' == ''">$(AssemblyVersion).0</PackageVersion>
+    <AssemblyFileVersion Condition="'$(AssemblyFileVersion)' == ''">$(PackageVersion)</AssemblyFileVersion>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageId>RokuDotNet.Rest</PackageId>
+    <Authors>Phillip Hoff</Authors>
+    <Title>ASP.NET Core Controller for Roku Devices</Title>
+    <PackageDescription>An ASP.NET Core controller that mimics Roku devices.</PackageDescription>
+    <Copyright>Copyright (c) 2018 Phillip Hoff. All rights reserved.</Copyright>
+    <PackageLicenseUrl>https://github.com/philliphoff/RokuDotNet.Rest/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageTags>roku;aspnetcore</PackageTags>
+    <PackageProjectUrl>https://github.com/philliphoff/RokuDotNet.Rest</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/philliphoff/RokuDotNet.Rest</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryBranch>master</RepositoryBranch>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.6" />
+    <PackageReference Include="RokuDotNet.Client" Version="0.1.0" />
+  </ItemGroup>
+
+</Project>
