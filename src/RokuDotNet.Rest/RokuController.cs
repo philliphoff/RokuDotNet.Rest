@@ -10,7 +10,7 @@ using System.Web;
 namespace RokuDotNet.Rest
 {
     [Route("api/[controller]")]
-    public class RokuController : Controller
+    public class RokuController : ControllerBase
     {
         private readonly IRokuDeviceProvider deviceProvider;
 
@@ -26,7 +26,7 @@ namespace RokuDotNet.Rest
         {
             var device = await this.deviceProvider.GetDeviceFromIdAsync(id);
 
-            return await device.QueryApi.GetAppsAsync();
+            return await device.Query.GetAppsAsync();
         }
 
         [Route("devices/{id}/query/active-app")]
@@ -34,7 +34,7 @@ namespace RokuDotNet.Rest
         {
             var device = await this.deviceProvider.GetDeviceFromIdAsync(id);
 
-            return await device.QueryApi.GetActiveAppAsync();
+            return await device.Query.GetActiveAppAsync();
         }
 
         [Route("devices/{id}/query/device-info")]
@@ -42,7 +42,7 @@ namespace RokuDotNet.Rest
         {
             var device = await this.deviceProvider.GetDeviceFromIdAsync(id);
 
-            return await device.QueryApi.GetDeviceInfoAsync();
+            return await device.Query.GetDeviceInfoAsync();
         }
  
         [Route("devices/{id}/query/tv-channels")]
@@ -50,7 +50,7 @@ namespace RokuDotNet.Rest
         {
             var device = await this.deviceProvider.GetDeviceFromIdAsync(id);
 
-            return await device.QueryApi.GetTvChannelsAsync();
+            return await device.Query.GetTvChannelsAsync();
         }
 
         [Route("devices/{id}/query/tv-active-channel")]
@@ -58,7 +58,7 @@ namespace RokuDotNet.Rest
         {
             var device = await this.deviceProvider.GetDeviceFromIdAsync(id);
 
-            return await device.QueryApi.GetActiveTvChannelAsync();
+            return await device.Query.GetActiveTvChannelAsync();
         }
 
         #endregion
@@ -68,19 +68,19 @@ namespace RokuDotNet.Rest
         [Route("devices/{id}/keydown/{key}")]
         public Task PostKeyDownAsync(string id, string key, CancellationToken cancellationToken)
         {
-            return this.KeyInputAsync(id, key, device => device.InputApi.KeyDownAsync, device => device.InputApi.KeyDownAsync, cancellationToken);
+            return this.KeyInputAsync(id, key, device => device.Input.KeyDownAsync, device => device.Input.KeyDownAsync, cancellationToken);
         }
 
         [Route("devices/{id}/keyup/{key}")]
         public Task PostKeyUpAsync(string id, string key, CancellationToken cancellationToken)
         {
-            return this.KeyInputAsync(id, key, device => device.InputApi.KeyUpAsync, device => device.InputApi.KeyUpAsync, cancellationToken);
+            return this.KeyInputAsync(id, key, device => device.Input.KeyUpAsync, device => device.Input.KeyUpAsync, cancellationToken);
         }
 
         [Route("devices/{id}/keypress/{key}")]
         public Task PostKeyPressAsync(string id, string key, CancellationToken cancellationToken)
         {
-            return this.KeyInputAsync(id, key, device => device.InputApi.KeyPressAsync, device => device.InputApi.KeyPressAsync, cancellationToken);
+            return this.KeyInputAsync(id, key, device => device.Input.KeyPressAsync, device => device.Input.KeyPressAsync, cancellationToken);
         }
 
         #endregion
