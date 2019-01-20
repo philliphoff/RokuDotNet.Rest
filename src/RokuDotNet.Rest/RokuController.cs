@@ -3,6 +3,7 @@ using RokuDotNet.Client;
 using RokuDotNet.Client.Input;
 using RokuDotNet.Client.Query;
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
@@ -81,6 +82,34 @@ namespace RokuDotNet.Rest
         public Task PostKeyPressAsync(string id, string key, CancellationToken cancellationToken)
         {
             return this.KeyInputAsync(id, key, device => device.Input.KeyPressAsync, device => device.Input.KeyPressAsync, cancellationToken);
+        }
+
+        [Route("devices/{id}/keypresses/literal")]
+        public async Task PostKeyPressesLiteralAsync(string id, [FromQuery(Name="keys")] string[] keys, CancellationToken cancellationToken)
+        {
+            var device = await this.deviceProvider.GetDeviceFromIdAsync(id);
+
+            var decodedKeys =
+                keys
+                    .Select(key => InputEncoding.DecodeString(key))
+                    .Select(decodedKey => decodedKey.Item1.Value)
+                    .ToArray();
+
+            await device.Input.KeyPressAsync(decodedKeys, cancellationToken);
+        }
+
+        [Route("devices/{id}/keypresses/special")]
+        public async Task PostKeyPressesSpecialAsync(string id, [FromQuery(Name="keys")] string[] keys, CancellationToken cancellationToken)
+        {
+            var device = await this.deviceProvider.GetDeviceFromIdAsync(id);
+
+            var decodedKeys =
+                keys
+                    .Select(key => InputEncoding.DecodeString(key))
+                    .Select(decodedKey => decodedKey.Item2.Value)
+                    .ToArray();
+
+            await device.Input.KeyPressAsync(decodedKeys, cancellationToken);
         }
 
         #endregion
