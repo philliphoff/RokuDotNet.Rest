@@ -127,15 +127,11 @@ namespace RokuDotNet.Rest
                 keys
                     .Select(key => InputEncoding.DecodeString(key))
                     .Select(
-                        decodedKey =>
+                        key =>
                         {
-                            if (decodedKey.Item1.HasValue)
+                            if (key.HasValue)
                             {
-                                return new PressedKey(decodedKey.Item1.Value);
-                            }
-                            else if (decodedKey.Item2.HasValue)
-                            {
-                                return new PressedKey(decodedKey.Item2.Value);
+                                return key.Value;
                             }
 
                             throw new InvalidOperationException();
@@ -150,19 +146,14 @@ namespace RokuDotNet.Rest
         {
             var device = await this.deviceProvider.GetDeviceFromIdAsync(id);
 
-            // CONSIDER: Refactor DecodeString() to return PressedKey.
-            var (inputChar, specialKey) = InputEncoding.DecodeString(key);
+            var pressedKey = InputEncoding.DecodeString(key);
 
-            if (inputChar.HasValue)
+            if (!pressedKey.HasValue)
             {
-                await inputCharAction(device)(inputChar.Value, cancellationToken);
-            }
-            else if (specialKey.HasValue)
-            {
-                await inputCharAction(device)(specialKey.Value, cancellationToken);
+                throw new InvalidOperationException();
             }
 
-            // TODO: Return 404.
+            await inputCharAction(device)(pressedKey.Value, cancellationToken);
         }
     }
 }
